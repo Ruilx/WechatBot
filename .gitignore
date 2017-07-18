@@ -1,0 +1,12 @@
+.idea
+*.pyc
+Debug
+debug
+Release
+release
+Makefile
+*.bak
+*.jpg
+*.jpeg
+*.png
+wechat.pkl
