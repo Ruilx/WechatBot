@@ -1,4 +1,3 @@
-=====
 WechatBot
 =====
 
@@ -7,6 +6,6 @@ WechatBot
 
 暂时使用方法请参见本家的使用方法
 
-*have fun*
+**have fun**
 
 
