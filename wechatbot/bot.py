@@ -65,6 +65,8 @@ class WechatBot(object):
             '_': int(time.time()) * 1000 + random.randint(1, 999),
         }
         r = self.session.get(WechatFirstLoginUrl, params=params)
+        self.printCookie()
+
         r.encoding = 'utf-8'
         data = r.text
         print "[DEBUG] WechatFirstLoginUrl: response: " + data
@@ -111,6 +113,8 @@ class WechatBot(object):
             'BaseRequest': self.params['base_request']
         }
         r = self.session.post(url, data=json.dumps(params))
+        self.printCookie()
+
         r.encoding = 'utf-8'
         dic = json.loads(r.text)
         self.params['sync_key'] = dic['SyncKey']
@@ -130,6 +134,7 @@ class WechatBot(object):
         while not redirectUrl:
             url = WechatSecondLoginUrl.format(tip=tip, uuid=self.params['uuid'], now=now())
             resp = self.session.get(url, headers=WechatHeaders)
+            self.printCookie()
 
             param = re.search(r'window.code=(\d+);', resp.text)
             code = param.group(1)
@@ -151,6 +156,7 @@ class WechatBot(object):
                 tip = 1
 
         resp = self.session.get(redirectUrl)
+        self.printCookie()
 
         doc = xml.dom.minidom.parseString(resp.text.encode('utf-8'))
         root = doc.documentElement
@@ -197,6 +203,7 @@ class WechatBot(object):
         while True:
             try:
                 r = self.session.get(url, timeout=30)
+                self.printCookie()
                 r.encoding = 'utf-8'
                 data = r.text
                 print "[DEBUG] SyncCheck Response: " + data
@@ -237,6 +244,8 @@ class WechatBot(object):
         }
         try:
             r = self.session.post(url, data=json.dumps(params), timeout=60)
+            self.printCookie()
+
             r.encoding = 'utf-8'
             dic = json.loads(r.text)
             if dic['BaseResponse']['Ret'] == 0:
@@ -305,6 +314,8 @@ class WechatBot(object):
             print 'URL = ' + url
             if url.startswith("http"):
                 r = self.session.get(url, headers=WechatBrowserHeader)
+                self.printCookie()
+
                 r.encoding('utf-8')
                 print r.text
                 return
@@ -326,6 +337,8 @@ class WechatBot(object):
         for i in range(5):
             try:
                 r = self.session.post(url, data=data, headers=WechatSendMsgHeader)
+                self.printCookie()
+
             except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
                 pass
             if r.status_code == 200:
@@ -349,4 +362,7 @@ class WechatBot(object):
         #self.logger.info(WechatBotRunning)
         print WechatBotRunning
         self.procMsg()
+
+    def printCookie(self):
+        print requests.utils.dict_from_cookiejar(requests.cookies)
 

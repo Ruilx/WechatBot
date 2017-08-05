@@ -1,4 +1,5 @@
 #!/root/src/anaconda2/bin/python
+# -*- coding: utf-8 -*-
 """
 qr - Convert stdin (or the first argument) to a QR Code.
 
